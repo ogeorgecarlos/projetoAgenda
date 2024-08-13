@@ -1,0 +1,53 @@
+<%- include("./includes/head") %>
+<%- include("./includes/nav") %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2"></div>
+
+        <div class="col-lg-8 my-3">
+            <h1 class="text-center">Cadastrar contatos</h1>
+            <p class="text-center lead">Informe os dados do novo contato.</p>
+
+            <%- include("./includes/messages") %>
+            
+        <div class="row">
+            <div class="col-lg">
+                <% if(contato._id) {%>
+                <form action="/userpage-edit?id=<%=contato._id%>" class= "edit-user" method="post">
+                <% } else { %>
+                <form action="/userpage-add" class= "cadastro-user" method="POST">
+                <% } %>
+                    <input type="hidden" name="_csrf" value= <%= csrfToken %> >
+                    <div class="form-group">
+                      <label>Nome</label>
+                      <input value="<%= contato.nome %>" type="text" class="form-control" name="nome">
+                    </div>
+                    <div class="form-group">
+                        <label>Sobrenome</label>
+                        <input value="<%= contato.sobrenome %>" type="text" class="form-control" name="sobrenome">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input value="<%= contato.telefone %>" type="tel" class="form-control" name="telefone">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input value="<%= contato.email %>" type="email" class="form-control" name="email">
+                    </div>
+                <% if(contato._id) {%>
+                    <button type="submit" class="btn btn-primary">Atualizar</button>
+                <% } else { %>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                <% } %>
+                </form>  
+            </div>
+        </div>
+
+        <div class="col-lg-2"></div>
+    </div>
+</div>
+
+<%- include("./includes/bottom") %>
+
+    
