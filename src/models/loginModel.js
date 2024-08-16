@@ -132,9 +132,8 @@ class Login{ // classe com logica de validacao de dados para exportacao e uso pe
 
     static async criarIndex(campo){ //So a nivel de estudos de indexes em banco de dados.
         try{
-            await loginSchema.index(campo)
-            const res = await loginModel.collection.getIndexes({full:true})
-            console.log(res)
+            loginSchema.index(campo)
+            await loginModel.collection.getIndexes({full:true})
         }catch(e){
             console.log(e)
         }
