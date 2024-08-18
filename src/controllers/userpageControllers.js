@@ -8,9 +8,7 @@ exports.addGet = (req, res) => {
 }
 
 exports.addPost = async (req, res) => {
-
-    const body = req.body
-    const contacts = new Contacts(body)
+    const contacts = new Contacts(req.body, req.session.userMail)
 
     try{
         await contacts.criarContatos()

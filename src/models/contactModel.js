@@ -24,14 +24,35 @@ const contactSchema = mongoose.Schema({
 const contactModel = mongoose.model("contact", contactSchema)
 
 class Contact {
-    constructor(body){
+    constructor(body, userMail){
         this.body = body;
-        this.listaDeContatos = []
-        this.errors = []
-        this.contact = null
+        this.userMail = userMail;
+        this.listaDeContatos = [];
+        this.errors = [];
+        this.contact = null;
+        this.modelName = this.userMail + "_Contacts"
+    }
+
+    async existModelToContact(){
+        console.log(this.userMail)
+        if(!mongoose.modelNames().some( e => e === this.modelName)){
+            await this.criarModelo()
+            return
+        }
+        this.contactModel = await mongoose.model(this.modelName, contactSchema)
+    }
+
+    async criarModelo(){
+        try{
+            if(!mongoose.modelNames().some(e => e === this.modelName))
+                this.contactModel = await mongoose.model(this.modelName, contactSchema)
+        }catch(e){
+            console.log(e)
+        }
     }
 
     async criarContatos(){
+        this.existModelToContact()
         try{
             this.validaDados()
             if(this.errors.length > 0) return

@@ -37,7 +37,7 @@ exports.register = async (req, res) => { //logica de renderizacao para a rota /l
 
 exports.userLogin = async (req, res) => {
     try{
-
+        if(!req.session.userMail) req.session.userMail = req.body.email
         const body = req.body
         const login = new Login(body)
         await login.enter()
