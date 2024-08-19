@@ -36,6 +36,7 @@ exports.register = async (req, res) => { //logica de renderizacao para a rota /l
 };
 
 exports.userLogin = async (req, res) => {
+    //devo excluir esse comentário
     try{
         if(!req.session.userMail) req.session.userMail = req.body.email
         const body = req.body
@@ -44,7 +45,7 @@ exports.userLogin = async (req, res) => {
 
         if(login.errors.length > 0){
             req.flash("errors", login.errors)
-
+            //devo excluir esse comentario tambem
             req.session.save(function(){
                 return res.redirect("/login-index")
             });
