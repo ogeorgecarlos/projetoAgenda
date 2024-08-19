@@ -34,7 +34,7 @@ exports.addPost = async (req, res) => {
 exports.editContact = async (req, res) => {
 
     try{
-        const contacts = new Contacts()
+        const contacts = new Contacts(null, req.session.userMail)
         res.locals.contato = await contacts.findContact(req.query.id)
         res.render("addContacts")
     }catch(e){
@@ -45,7 +45,7 @@ exports.editContact = async (req, res) => {
 exports.updateContact = async (req, res) => {
 
     try{
-        const contacts = new Contacts(req.body);
+        const contacts = new Contacts(req.body, req.session.userMail);
         await contacts.UpdateContact(req.query.id)
 
         if(contacts.errors.length > 0){
@@ -69,7 +69,7 @@ exports.updateContact = async (req, res) => {
 exports.deleteContact = async (req, res) => {
 
     try{
-        const contacts = new Contacts()
+        const contacts = new Contacts(null, req.session.userMail)
         const contatoRemovido = await contacts.deleteContact(req.query.id)
         req.flash("success", `Contato removido com sucesso`)
         req.session.save(()=>{

@@ -21,38 +21,18 @@ const contactSchema = mongoose.Schema({
     }
 })
 
-const contactModel = mongoose.model("contact", contactSchema)
-
 class Contact {
-    constructor(body, userMail){
+    constructor(body, email){
         this.body = body;
-        this.userMail = userMail;
+        this.userMail = email ?? "session@gmail.com";
         this.listaDeContatos = [];
         this.errors = [];
         this.contact = null;
-        this.modelName = this.userMail + "_Contacts"
-    }
-
-    async existModelToContact(){
-        console.log(this.userMail)
-        if(!mongoose.modelNames().some( e => e === this.modelName)){
-            await this.criarModelo()
-            return
-        }
-        this.contactModel = await mongoose.model(this.modelName, contactSchema)
-    }
-
-    async criarModelo(){
-        try{
-            if(!mongoose.modelNames().some(e => e === this.modelName))
-                this.contactModel = await mongoose.model(this.modelName, contactSchema)
-        }catch(e){
-            console.log(e)
-        }
+        this.modelName = email + "_Contacts"
+        this.contactModel = mongoose.model(this.modelName, contactSchema)
     }
 
     async criarContatos(){
-        this.existModelToContact()
         try{
             this.validaDados()
             if(this.errors.length > 0) return
@@ -63,7 +43,7 @@ class Contact {
             this.checkRequiredFields()
             if(this.errors.length > 0) return
 
-            this.contact = await contactModel.create(this.body)
+            this.contact = await this.contactModel.create(this.body)
 
         } catch(e){
             console.log(e)
@@ -72,7 +52,7 @@ class Contact {
 
     async listarContatos(){
         try{
-            this.listaDeContatos = await contactModel.find().sort({"criadoEm": 1})
+            this.listaDeContatos = await this.contactModel.find().sort({"criadoEm": 1})
         } catch(e){
             console.log(e)
         }
@@ -114,12 +94,12 @@ class Contact {
             const email = this.body.email;
             const telefone = this.body.telefone ;
             if(email){
-                const userMail = await contactModel.findOne({email});
+                const userMail = await this.contactModel.findOne({email});
                 if(userMail) this.errors.push(`"${email}" já cadastrado no usuário "${userMail.nome}"`);
             }
 
             if(telefone){
-                const userFone = await contactModel.findOne({telefone});
+                const userFone = await this.contactModel.findOne({telefone});
                 if(userFone) this.errors.push(`"${telefone}" já cadastrado no usuário "${userFone.nome}"`);
             }
         
@@ -132,7 +112,7 @@ class Contact {
 
     async findContact(id){
         if(!id) return this.errors.push("É preciso informar um ID para busca de contatos.");
-        this.contact = await contactModel.findById(id)
+        this.contact = await this.contactModel.findById(id)
         return this.contact
     }
 
@@ -145,7 +125,7 @@ class Contact {
             this.checkRequiredFields()
             if(this.errors.length > 0) return
 
-            await contactModel.findByIdAndUpdate(id, this.body, {new:true})
+            await this.contactModel.findByIdAndUpdate(id, this.body, {new:true})
         }catch(e){
             console.log(e)
         }
@@ -156,7 +136,7 @@ class Contact {
         if(!id) return this.errors.push("É preciso informar um ID para deletar um contatos.");
         
         try{
-            const result = await contactModel.findByIdAndDelete({_id:id});
+            const result = await this.contactModel.findByIdAndDelete({_id:id});
             if(!result) this.errors.push("Não foi possivel localizar e remover o contato com o ID informado")
         }catch(e){
             this.errors.push("Não foi possivel deletar o contato. Tente novamente.")
