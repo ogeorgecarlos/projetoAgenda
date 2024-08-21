@@ -23,10 +23,11 @@ const loginModel = mongoose.model("login", loginSchema)
 
 
 class Login{ // classe com logica de validacao de dados para exportacao e uso pelo controller.
-    constructor(body){
+    constructor(body, userMail, lastAccess){
         this.body = body //corpo da requisicao
         this.errors = [] // um array quqe receberá erros encontrados e servirá como red flag para nao criação do usuário
         this.user = null // propriedade que referenciará o usuario, se criado.
+        this.lastAccess = lastAccess
     }
 
     async register(){ //Método principal para registar o usuario apos o recebimento da requisicao POST

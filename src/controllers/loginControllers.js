@@ -24,8 +24,7 @@ exports.register = async (req, res) => {
 
 exports.userLogin = async (req, res) => {
     try{
-        req.session.userMail = req.body.email
-        const login = new Login(req.body, req.session.userMail)
+        const login = new Login(req.body)
         await login.enter()
 
         if(login.errors.length > 0){
@@ -36,6 +35,8 @@ exports.userLogin = async (req, res) => {
 
         req.flash("success", "Você entrou no sistema")
         req.session.user = login.user
+        req.session.lastAccess = new Date()
+        req.session.userMail = req.body.email
         req.session.save(() => res.redirect("/"))
 
     }catch(e){
