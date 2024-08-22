@@ -34,9 +34,10 @@ exports.userLogin = async (req, res) => {
         }
 
         req.flash("success", "Você entrou no sistema")
-        req.session.user = login.user
-        req.session.lastAccess = new Date()
-        req.session.userMail = req.body.email
+        req.session.user = login.user;
+        req.session.lastAccess = new Date();
+        req.session.userMail = req.body.email;
+        req.session.isLogged = true;
         req.session.save(() => res.redirect("/"))
 
     }catch(e){
